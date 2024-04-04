@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front-end Execution Test</title>
+</head>
+
+<body>
+    <!-- <h1 id="test-heading" class="page-heading">This is a test!</h1> -->
+
+    <h1>Users</h1>
+    <h3 id="user-1-name"></h3>
+    <h3 id="user-2-name"></h3>
+    <h3 id="user-3-name"></h3>
+    <h3 id="user-4-name"></h3>
+    <h3 id="user-5-name"></h3>
+    <h3 id="user-6-name"></h3>
+    <h3 id="user-7-name"></h3>
+    <h3 id="user-8-name"></h3>
+    <h3 id="user-9-name"></h3>
+    <h3 id="user-10-name"></h3>
+    <h3 id="user-11-name"></h3>
+
+    <div>
+        <input id="new-user-name" text placeholder="Enter a new user name">
+        <button onclick="createClicked()">Create</button>
+    </div>
+</body>
+
+<script>
+    // The fetch('/api/users') method initiates a GET request to the /api/users endpoint.
+    /*fetch('/api/users')
+        .then(res => res.json()) //Converts the response to JSON format
+        .then(users => ); //It logs the received user data to browser's console
+    */
+
+    // Manipulating text using id
+    /*const heading1 = document.getElementById('test-heading');
+    heading1.innerText = 'Changed the text using id';*/
+
+    // Manipulating text using className and converting it into array using spread operator
+    /*const heading2 = [...document.getElementsByClassName('page-heading')][0];
+    heading2.innerText = 'Changed the text using class-name';*/
+
+    // Manipulating text using tagName and converting it into array using spread operator
+    /*const heading3 = [...document.getElementsByTagName('h1')][0];
+    heading3.innerText = 'Changed the text using tag-name';*/
+
+    fetch('/api/users')
+        .then(res => res.json())
+        .then(users => {
+            users.forEach((user, ind) => {
+                document.getElementById(`user-${ind+1}-name`).innerText = user.name;
+            })
+        });
+
+    function createClicked() {
+        const newUserInput = document.getElementById('new-user-name');
+        const newUserName = newUserInput.value;
+
+        fetch('/api/users', {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ name: newUserName })
+        })
+            .then(res => res.json())
+            .then(updatedUsers => {
+                updatedUsers.forEach((user, ind) => {
+                    const userElement = document.getElementById(`user-${ind + 1}-name`)
+                    userElement.innerText = user.name;
+                    newUserInput.value = '';
+                })
+            });
+    }
+
+</script>
+
+</html>
