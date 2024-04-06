@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h3>{{ user.name }}</h3>
+    {{!-- Usage of if helper --}}
+    {{#if user.age}}
+        <p>Age: {{ user.age }}</p>
+    {{/if }}
+    <p>Hair Color: {{ user.hairColor }}</p>
+</body>
+<script>
+
+</script>
+</html>
