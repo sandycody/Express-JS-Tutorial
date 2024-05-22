@@ -18,6 +18,10 @@ const PORT = process.env.PORT || 3000;
 
 // GET, POST, PUT, DELETE --> Different request types of HTTP
 
+/* Note : For manual testing, curl command is not recommended as testing tool to test HTTP routes on bigger level.
+
+It can be used to test simple servers*/
+
 app.get('/products', (req, res) => {
     res.send('Received a GET request on /products!');
 });
