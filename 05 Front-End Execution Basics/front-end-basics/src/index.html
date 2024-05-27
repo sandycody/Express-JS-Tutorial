@@ -33,7 +33,7 @@
     // The fetch('/api/users') method initiates a GET request to the /api/users endpoint.
     /*fetch('/api/users')
         .then(res => res.json()) //Converts the response to JSON format
-        .then(users => ); //It logs the received user data to browser's console
+        .then(users => console.log(users)); //It logs the received user data to browser's console
     */
 
     // Manipulating text using id
@@ -48,13 +48,13 @@
     /*const heading3 = [...document.getElementsByTagName('h1')][0];
     heading3.innerText = 'Changed the text using tag-name';*/
 
-    fetch('/api/users')
-        .then(res => res.json())
-        .then(users => {
-            users.forEach((user, ind) => {
-                document.getElementById(`user-${ind+1}-name`).innerText = user.name;
-            })
-        });
+    // fetch('/api/users')
+    //     .then(res => res.json())
+    //     .then(users => {
+    //         users.forEach((user, ind) => {
+    //             document.getElementById(`user-${ind+1}-name`).innerText = user.name;
+    //         })
+    //     });
 
     function createClicked() {
         const newUserInput = document.getElementById('new-user-name');
@@ -62,7 +62,7 @@
 
         fetch('/api/users', {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: newUserName })
         })
             .then(res => res.json())
