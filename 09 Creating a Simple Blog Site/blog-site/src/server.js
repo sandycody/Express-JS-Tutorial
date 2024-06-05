@@ -12,7 +12,8 @@ app.engine('hbs', engine({
     /* OR using without path.join() */
     partialsDir: __dirname + '/views' + '/partials',
     helpers: {
-        shorten: (str, length) => str.slice(0, length)
+        shorten: (str, length) => str.slice(0, length),
+        formatDate: (dateObj) => dateObj.toLocaleDateString()
     } 
 }));
 app.set('view engine', 'hbs');
@@ -22,7 +23,8 @@ app.set('views', __dirname + '/views');
 
 app.get('/', (req, res) => {
     res.render('home', {
-        title: 'Home'
+        title: 'Home',
+        articles: articles.slice().sort((art1, art2) => art2.upvotes - art1.upvotes) //Sorting in descending order using Numeric Sort on Array in JS
     });
 });
 
@@ -44,8 +46,27 @@ app.get('/articles/:articleId', (req, res) => {
     const matchingArticle = articles.find(art => art.id === articleId);
     res.render('individual-article', {
         title: matchingArticle.title,
-        article: matchingArticle
+        article: matchingArticle,
+        articles: articles.filter(art => art.id !== articleId)
     });
+});
+
+app.put('/api/articles/:articleId/upvotes', (req, res) => {
+    const { articleId } = req.params;
+    const matchingArticle = articles.find(art => art.id === articleId);
+    matchingArticle.upvotes += 1;
+    res.json(matchingArticle);
+});
+
+app.post('/api/articles/:articleId/comments', (req, res) => {
+    const { articleId } = req.params;
+    const matchingArticle = articles.find(art => art.id === articleId);
+    
+    const { author, text } = req.body;
+    const newComment = { author, text, createdAt: new Date().toLocaleDateString() };
+
+    matchingArticle.comments.push(newComment);
+    res.json(newComment); //We just have to send the new comment
 });
 
 const PORT = process.env.PORT || 3000;

@@ -1,4 +1,76 @@
+<script>
+    function onUpvote() {
+        const upvotesSpan = document.getElementById('number-of-upvotes');
+        upvotesSpan.innerText = Number(upvotesSpan.innerText) + 1;
+        fetch('/api/articles/{{ article.id }}/upvotes', {
+            method: "PUT"
+        });
+    }
+
+    function onNewComment() {
+        const authorInput = document.getElementById('comment-author');
+        const textInput = document.getElementById('comment-text');
+
+        const author = authorInput.value;
+        const text = textInput.value;
+
+        fetch('/api/articles/{{ article.id }}/comments', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ author, text })
+        })
+        .then(res => res.json()) 
+        .then(newComment => {
+            const commentsContainer = document.getElementById('comments-container');
+
+            const newCommentContainer = document.createElement('div');
+
+            const authorHeading = document.createElement('h3');
+            authorHeading.innerText = newComment.author;
+
+
+            const textEl = document.createElement('p');
+            textEl.innerText = newComment.text;
+
+            const dateEl = document.createElement('p');
+            dateEl.innerText = `Posted on ${newComment.createdAt}`;
+
+            newCommentContainer.appendChild(authorHeading);
+            newCommentContainer.appendChild(textEl);
+            newCommentContainer.appendChild(dateEl);
+
+            commentsContainer.appendChild(newCommentContainer);
+
+            authorInput.value = '';
+            textInput.value = '';
+        })
+    }
+</script>
+
 <h1>{{ article.title }}</h1>
+<div>
+    <p>This article has been upvoted <span id="number-of-upvotes">{{ article.upvotes }}</span> time(s)</p>
+    <button onclick="onUpvote()">Upvote</button>
+</div>
 {{#each article.content}}
     <p>{{ this }}</p>
 {{/each}}
+
+<h3>Related Articles</h3>
+{{> listOfArticles }}
+
+<div>
+    <input id="comment-author" type="text" placeholder="Enter your Name..."/>
+    <textarea id="comment-text" rows="10" cols="40" placeholder="Write your comment here..."></textarea>
+    <button onclick="onNewComment()">Submit Comment</button>
+</div>
+
+<div id="comments-container">
+    {{#each article.comments}}
+        <div>
+            <h3>{{ this.author }}</h3>
+            <p>{{ this.text }}</p>
+            <p>Posted on {{ this.createdAt }}</p>
+        </div>
+    {{/each}}
+</div>
